@@ -35,6 +35,7 @@ export class TrackerGateway
 
   @SubscribeMessage('marker') //receives the marker from the client and emits it to all users.
   handleEvent(client: Socket, data: any): void {
+    console.log(data);
     this.markers = [...this.markers, data];
     this.wss.emit('marker', this.markers);
   }
