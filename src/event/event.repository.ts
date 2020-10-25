@@ -6,12 +6,16 @@ import { GetEventFilterDto } from './dto/get-event-filter.dto';
 import { userInfo } from 'os';
 import { stat } from 'fs';
 import { InternalServerErrorException, Logger } from '@nestjs/common';
+import { User } from 'src/auth/user.entity';
 
 @EntityRepository(Event)
 export class EventRepository extends Repository<Event> {
   private logger = new Logger('EventRepository');
 
-  async createEvent(createEventDto: CreateEventDto): Promise<Event> {
+  async createEvent(
+    createEventDto: CreateEventDto,
+    user: User,
+  ): Promise<Event> {
     const {
       title,
       description,
@@ -29,18 +33,23 @@ export class EventRepository extends Repository<Event> {
     event.duration = duration;
     event.length = length;
     event.date = date;
+    event.user = user;
     (event.registration = registration
       ? registration
       : EventRegistration.CLOSED),
       (event.status = status ? status : EventStatus.TBD),
       await event.save();
+
+    delete event.user; //removes the user from the event before sending it back to client
     return event;
   }
 
-  async getEvents(filterDto: GetEventFilterDto): Promise<Event[]> {
+  async getEvents(filterDto: GetEventFilterDto, user: User): Promise<Event[]> {
     const { search, status, registration } = filterDto;
     const query = this.createQueryBuilder('event');
-    // query.where('event.userId = :userId', {userId: user.id})
+    if (user) {
+      query.where('event.userId = :userId', { userId: user.id });
+    }
 
     if (status) {
       query.andWhere('event.status = :status', { status });

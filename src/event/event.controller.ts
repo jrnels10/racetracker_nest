@@ -10,6 +10,7 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -23,27 +24,36 @@ import {
 } from './pipes/event-validation.pipe';
 import { Event } from './event.entity';
 import { EventRegistration, EventStatus } from './event.enum';
+import { AuthGuard } from '@nestjs/passport';
+import { User } from 'src/auth/user.entity';
+import { GetUser } from 'src/auth/get-user.decorator';
 
+@UseGuards(AuthGuard())
 @Controller('event')
 export class EventController {
   private logger = new Logger('EVentsController');
   constructor(private eventService: EventService) {}
 
+  @UseGuards(AuthGuard())
   @Get()
   getEvents(
     @Query(ValidationPipe) filterDto: GetEventFilterDto,
+    @GetUser() user: User,
   ): Promise<Event[]> {
     // this.logger.verbose(
     //     `User "${user.username}" retrieving all tasks. Filters: ${JSON.stringify(
     //       filterDto,
     //     )}`,
     //   );
-    return this.eventService.getEvents(filterDto);
+    return this.eventService.getEvents(filterDto, user);
   }
 
   @Get('/:id')
-  async getEventById(@Param('id', ParseIntPipe) id: number): Promise<Event> {
-    return await this.eventService.getEventById(id);
+  async getEventById(
+    @Param('id', ParseIntPipe) id: number,
+    @GetUser() user: User,
+  ): Promise<Event> {
+    return await this.eventService.getEventById(id, user);
   }
 
   @Patch('/:id')
@@ -52,17 +62,22 @@ export class EventController {
     @Body('status', EventStatusValidationPipe) status: EventStatus,
     @Body('registration', EventRegistrationValidationPipe)
     registration: EventRegistration,
+    @GetUser() user: User,
   ): Promise<Event> {
-    return await this.eventService.updateEvent(id, status, registration);
+    return await this.eventService.updateEvent(id, status, registration, user);
   }
+
   @Post()
   @UsePipes(ValidationPipe)
-  async createEvent(@Body() createEventDto: CreateEventDto): Promise<Event> {
-    return await this.eventService.createEvent(createEventDto);
+  async createEvent(
+    @Body() createEventDto: CreateEventDto,
+    @GetUser() user: User,
+  ): Promise<Event> {
+    return await this.eventService.createEvent(createEventDto, user);
   }
 
   @Delete('/:id')
-  deleteEvent(@Param('id') id: number): void {
-    this.eventService.deleteEvent(id);
+  deleteEvent(@Param('id') id: number, @GetUser() user: User): void {
+    this.eventService.deleteEvent(id, user);
   }
 }

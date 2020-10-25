@@ -1,4 +1,11 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from 'src/auth/user.entity';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { EventRegistration, EventStatus } from './event.enum';
 // import { EventRegistration, EventStatus } from './event.model';
 
@@ -22,4 +29,14 @@ export class Event extends BaseEntity {
   registration: EventRegistration;
   @Column()
   status: EventStatus;
+
+  @ManyToOne(
+    type => User,
+    user => user.events,
+    { eager: false },
+  )
+  user: User;
+
+  @Column()
+  userId: number;
 }
