@@ -1,3 +1,4 @@
 export interface JwtPayload {
-  username: string;
+  email: string;
+  role: string;
 } //add additonal fields like roles, permissions, etc.

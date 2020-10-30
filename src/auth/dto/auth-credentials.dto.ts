@@ -5,16 +5,25 @@ import {
   Matches,
   IsEmail,
 } from 'class-validator';
+import { UserRole } from '../user.enum';
 
 export class AuthCredentialsDto {
   @IsString()
   @MinLength(4)
   @MaxLength(20)
-  username: string;
+  firstName: string;
+
+  @IsString()
+  @MinLength(4)
+  @MaxLength(20)
+  lastName: string;
 
   @IsEmail()
   @IsString()
   email: string;
+
+  @IsString()
+  role: UserRole;
 
   @IsString()
   @MinLength(8)
@@ -27,10 +36,9 @@ export class AuthCredentialsDto {
 }
 
 export class AuthSignInCredentialsDto {
+  @IsEmail()
   @IsString()
-  @MinLength(4)
-  @MaxLength(20)
-  username: string;
+  email: string;
 
   @IsString()
   @MinLength(8)

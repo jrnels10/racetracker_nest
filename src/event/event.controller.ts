@@ -33,13 +33,13 @@ import { GetUser } from 'src/auth/get-user.decorator';
 export class EventController {
   private logger = new Logger('EVentsController');
   constructor(private eventService: EventService) {}
-
-  @UseGuards(AuthGuard())
+  // @UseGuards(AuthGuard())
   @Get()
   getEvents(
     @Query(ValidationPipe) filterDto: GetEventFilterDto,
     @GetUser() user: User,
   ): Promise<Event[]> {
+    console.log('events');
     // this.logger.verbose(
     //     `User "${user.username}" retrieving all tasks. Filters: ${JSON.stringify(
     //       filterDto,

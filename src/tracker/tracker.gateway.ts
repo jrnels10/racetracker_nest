@@ -9,15 +9,13 @@ import {
 } from '@nestjs/websockets';
 import { Logger } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
+import { GetUser } from 'src/auth/get-user.decorator';
+import { User } from 'src/auth/user.entity';
 
 @WebSocketGateway()
 export class TrackerGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
-  public markers = [
-    [33.31, -112],
-    [33.3, -112],
-    [33.32, -112],
-  ];
+  public markers = [];
   handleDisconnect(client: Socket) {
     this.logger.log(`Client disconnected: ${client.id}`);
   }
@@ -36,7 +34,7 @@ export class TrackerGateway
   @SubscribeMessage('marker') //receives the marker from the client and emits it to all users.
   handleEvent(client: Socket, data: any): void {
     console.log(data);
-    this.markers = [...this.markers, data];
+    this.markers = [data];
     this.wss.emit('marker', this.markers);
   }
 }

@@ -4,6 +4,7 @@ import {
   Body,
   ValidationPipe,
   UseGuards,
+  Get,
 } from '@nestjs/common';
 import {
   AuthCredentialsDto,
@@ -30,9 +31,15 @@ export class AuthController {
     return this.authService.signin(authSignInCredentialsDto);
   }
 
+  @Get()
+  @UseGuards(AuthGuard())
+  getUser(@GetUser() user: User) {
+    return user;
+  }
+
   @Post('/test')
   @UseGuards(AuthGuard())
   test(@GetUser() user: User) {
-    console.log(user);
+    console.log('test', user);
   }
 }
