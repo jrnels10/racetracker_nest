@@ -27,6 +27,12 @@ export class User extends BaseEntity {
   @Column()
   role: string;
 
+  @Column({ nullable: true })
+  homeTown: string;
+
+  @Column({ length: 2, nullable: true })
+  homeState: string;
+
   @Column()
   password: string;
 

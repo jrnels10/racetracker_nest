@@ -7,10 +7,16 @@ import { EventModule } from './event/event.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeOrmConfig } from './config/typeorm.config';
 import { AuthModule } from './auth/auth.module';
+import { CompetitorsGateway } from './tracker/Competitors.gateway';
 
 @Module({
-  imports: [TrackerModule, EventModule, TypeOrmModule.forRoot(typeOrmConfig), AuthModule],
+  imports: [
+    TrackerModule,
+    EventModule,
+    TypeOrmModule.forRoot(typeOrmConfig),
+    AuthModule,
+  ],
   controllers: [AppController],
-  providers: [AppService, TrackerGateway],
+  providers: [AppService, TrackerGateway, CompetitorsGateway],
 })
 export class AppModule {}

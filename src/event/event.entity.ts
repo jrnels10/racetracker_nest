@@ -29,7 +29,8 @@ export class Event extends BaseEntity {
   registration: EventRegistration;
   @Column()
   status: EventStatus;
-
+  @Column('jsonb', { nullable: true })
+  route: number;
   @ManyToOne(
     type => User,
     user => user.events,

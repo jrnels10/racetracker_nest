@@ -8,6 +8,7 @@ export class CreateEventDto {
   location: string;
   duration: number;
   length: number;
+  route: number;
   registration: EventRegistration;
   date: Date;
   status: EventStatus;

@@ -73,6 +73,7 @@ export class EventController {
     @Body() createEventDto: CreateEventDto,
     @GetUser() user: User,
   ): Promise<Event> {
+    console.log(createEventDto);
     return await this.eventService.createEvent(createEventDto, user);
   }
 

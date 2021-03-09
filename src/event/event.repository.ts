@@ -25,6 +25,7 @@ export class EventRepository extends Repository<Event> {
       date,
       registration,
       status,
+      route,
     } = createEventDto;
     const event = new Event();
     event.title = title;
@@ -34,6 +35,7 @@ export class EventRepository extends Repository<Event> {
     event.length = length;
     event.date = date;
     event.user = user;
+    event.route = route;
     (event.registration = registration
       ? registration
       : EventRegistration.CLOSED),
